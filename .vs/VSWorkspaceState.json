@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\api",
+    "\\config",
+    "\\middleware",
+    "\\services"
+  ],
+  "SelectedNode": "\\config\\db.js",
+  "PreviewInSolutionExplorer": false
+}

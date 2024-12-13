@@ -4,6 +4,9 @@ const path = require('path');
 const { connectDB } = require('./config/db');
 const authRoutes = require('./api/auth');
 const userRoutes = require('./api/user');
+const adminRoutes = require('./api/admin');
+
+
 
 const app = express();
 const port = 5000;
@@ -11,6 +14,9 @@ const port = 5000;
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+//admin
+app.use('/api/admin', adminRoutes);
 
 // Connect to MongoDB
 connectDB();
