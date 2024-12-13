@@ -22,13 +22,8 @@
             <img src="/assets/image/logo.png" alt="BookHub Logo" class="h-8 w-auto mr-2">
             <h1 class="text-black text-xl font-bold">Library</h1>
         </div>
-        <div class="relative">
-            <input id="search" type="text" placeholder="Search books..."
-                class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
-            <button class="absolute right-3 top-2 text-gray-600"><i class="fas fa-search"></i></button>
-            <div id="suggestions" class="hidden absolute top-full mt-1 bg-white w-full shadow-md rounded">
-                <!-- Search suggestions can appear here -->
-            </div>
+        <div>
+            <p id="welcomeMessage" class="text-gray-700"></p>
         </div>
     </header>
 
@@ -39,24 +34,27 @@
             <nav>
                 <ul>
                     <li class="mb-4">
-                        <a href="#"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-book"></i><span class="ml-2">Catalog</span></a>
+                        <a href="#" class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-book"></i><span class="ml-2">Catalog</span>
+                        </a>
                     </li>
                     <li class="mb-4">
                         <a href="/statics/account.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-user"></i><span class="ml-2">Account</span></a>
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-user"></i><span class="ml-2">Account</span>
+                        </a>
                     </li>
                     <li class="mb-4">
                         <a href="/statics/history.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-history"></i><span class="ml-2">History</span></a>
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-history"></i><span class="ml-2">History</span>
+                        </a>
                     </li>
                     <li>
-                        <a href="/statics/signin.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span></a>
+                        <a href="#" id="logoutBtn"
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span>
+                        </a>
                     </li>
                 </ul>
             </nav>
@@ -80,278 +78,71 @@
         </div>
     </div>
 
-    <!-- Borrow Modal -->
-    <div id="borrowModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onclick="borrowBook()">Borrow</button>
-        <div class="bg-white p-8 rounded-lg max-w-lg w-full mx-4">
-            <h2 class="text-2xl font-bold mb-4">Borrow Book</h2>
-            <form id="borrowForm" class="space-y-4">
-                <div>
-                    <label class="block text-gray-700 mb-2">Pickup Date</label>
-                    <input type="date" id="pickupDate" class="w-full p-2 border rounded" required>
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2">Return Date (5 days from pickup)</label>
-                    <input type="date" id="returnDate" class="w-full p-2 border rounded bg-gray-100" readonly>
-                </div>
-                <div class="flex justify-end space-x-4">
-                    <button type="button" onclick="closeBorrowModal()"
-                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Confirm
-                        Borrow</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="relative">
-        <input id="search" type="text" placeholder="Search books..."
-            class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
-        <button class="absolute right-3 top-2 text-gray-600"><i class="fas fa-search"></i></button>
-        <div id="suggestions"
-            class="hidden absolute top-full mt-1 bg-white w-full shadow-md rounded max-h-48 overflow-y-auto z-10">
-            <!-- Suggestions will be dynamically added here -->
-        </div>
-    </div>
-
-
-
     <script>
-        const search = document.getElementById('search');
-        const suggestions = document.getElementById('suggestions');
-        const bookDetailsModal = document.getElementById('bookDetailsModal');
-        const borrowModal = document.getElementById('borrowModal');
-        const pickupDate = document.getElementById('pickupDate');
-        const returnDate = document.getElementById('returnDate');
-        const bookGrid = document.getElementById('book-grid');
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
 
-        const bookData = {
-            "The Great Gatsby": {
-                title: "The Great Gatsby",
-                author: "F. Scott Fitzgerald",
-                publishYear: "1925",
-                genre: "Literary Fiction",
-                description: "The story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan."
-            },
-            "To Kill a Mockingbird": {
-                title: "To Kill a Mockingbird",
-                author: "Harper Lee",
-                publishYear: "1960",
-                genre: "Literary Fiction",
-                description: "The story of racial injustice and the loss of innocence in the American South."
-            },
-            "1984": {
-                title: "1984",
-                author: "George Orwell",
-                publishYear: "1949",
-                genre: "Dystopian Fiction",
-                description: "A chilling depiction of a totalitarian regime that employs surveillance and propaganda to maintain control."
-            },
-            "Pride and Prejudice": {
-                title: "Pride and Prejudice",
-                author: "Jane Austen",
-                publishYear: "1813",
-                genre: "Romantic Fiction",
-                description: "A romantic novel that explores the issues of class, marriage, and individuality in 19th-century England."
-            },
-            "The Catcher in the Rye": {
-                title: "The Catcher in the Rye",
-                author: "J.D. Salinger",
-                publishYear: "1951",
-                genre: "Literary Fiction",
-                description: "A story about teenage angst and alienation, narrated by the rebellious Holden Caulfield."
-            },
-            "Moby Dick": {
-                title: "Moby Dick",
-                author: "Herman Melville",
-                publishYear: "1851",
-                genre: "Adventure Fiction",
-                description: "The epic tale of Captain Ahab's obsessive quest to hunt down the white whale, Moby Dick."
-            },
-            "War and Peace": {
-                title: "War and Peace",
-                author: "Leo Tolstoy",
-                publishYear: "1869",
-                genre: "Historical Fiction",
-                description: "A sweeping narrative of Russian society during the Napoleonic era, exploring themes of love, fate, and history."
-            },
-            "The Hobbit": {
-                title: "The Hobbit",
-                author: "J.R.R. Tolkien",
-                publishYear: "1937",
-                genre: "Fantasy",
-                description: "A fantasy adventure that follows Bilbo Baggins on his journey with a group of dwarves to reclaim their homeland."
-            },
-            "The Picture of Dorian Gray": {
-                title: "The Picture of Dorian Gray",
-                author: "Oscar Wilde",
-                publishYear: "1890",
-                genre: "Philosophical Fiction",
-                description: "A novel that explores the consequences of vanity and moral corruption through the story of Dorian Gray."
-            },
-            "Brave New World": {
-                title: "Brave New World",
-                author: "Aldous Huxley",
-                publishYear: "1932",
-                genre: "Dystopian Fiction",
-                description: "A satirical look at a future society driven by technological advances, consumerism, and state control."
-            }
-        };
-
-        const bookTitles = Object.keys(bookData);
-        let loadedBooks = 0;
-
-        // Hiển thị chi tiết sách trong modal
-        function showBookDetails(bookTitle) {
-            const book = bookData[bookTitle];
-            const detailsHTML = `
-                <div class="flex items-center space-x-6">
-                    <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="${book.title} cover" class="w-32 h-48 object-cover rounded-md">
-                    <div class="space-y-3">
-                        <h3 class="text-3xl font-semibold text-gray-800">${book.title}</h3>
-                        <p class="text-lg text-gray-600">by ${book.author}</p>
-                        <p class="text-sm text-gray-500">Available for borrowing: Yes</p>
-                        <p class="text-sm text-gray-500">Publish Year: ${book.publishYear}</p>
-                        <p class="text-sm text-gray-500">Genre: ${book.genre}</p>
-                        <p class="text-gray-700">Description: ${book.description}</p>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-4">
-                    <button onclick="closeBookDetailsModal()" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">Close</button>
-                    <button onclick="showBorrowModal()" class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Borrow</button>
-                </div>
-            `;
-            document.getElementById('bookDetails').innerHTML = detailsHTML;
-            bookDetailsModal.classList.remove('hidden');
+        // Kiểm tra token và role
+        if (!token || role !== 'user') {
+            alert('Access denied. Redirecting to login page.');
+            window.location.href = '/statics/signin.html';
         }
 
-        // Đóng modal Book Details
-        function closeBookDetailsModal() {
-            bookDetailsModal.classList.add('hidden');
-        }
-
-        function showBorrowModal() {
-            borrowModal.classList.remove('hidden');
-        }
-
-        function closeBorrowModal() {
-            borrowModal.classList.add('hidden');
-        }
-
-        pickupDate.addEventListener('change', function () {
-            const pickup = new Date(this.value);
-            const return_date = new Date(pickup);
-            return_date.setDate(pickup.getDate() + 5);
-            returnDate.valueAsDate = return_date;
-        });
-
+        // Hiển thị tên người dùng
         document.addEventListener('DOMContentLoaded', function () {
-            loadMoreBooks();
+            const username = localStorage.getItem('username');
+            if (username) {
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${username}!`;
+            }
         });
 
-        function loadMoreBooks() {
-            for (let i = 0; i < 4 && loadedBooks < bookTitles.length; i++) {
-                bookGrid.appendChild(createBookElement(bookTitles[loadedBooks]));
-                loadedBooks++;
+        // Fetch books từ API
+        async function fetchBooks() {
+            try {
+                const response = await fetch('http://localhost:5000/api/books', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch books.');
+                }
+
+                const books = await response.json();
+                const bookGrid = document.getElementById('book-grid');
+                books.forEach(book => {
+                    bookGrid.appendChild(createBookElement(book.title, book.author));
+                });
+            } catch (error) {
+                console.error('Error fetching books:', error);
+                alert('Failed to load books. Please try again.');
             }
         }
 
-        function createBookElement(title) {
+        // Tạo thẻ sách
+        function createBookElement(title, author) {
             const book = document.createElement('div');
-            book.className = 'bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400';
+            book.className = 'bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105';
             book.innerHTML = `
-                <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="${title} cover" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold mb-2">${title}</h3>
-                </div>
-            `;
-            book.addEventListener('click', () => showBookDetails(title));
+                    <img src="https://via.placeholder.com/150" alt="${title} cover" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-2">${title}</h3>
+                        <p class="text-sm text-gray-500">by ${author}</p>
+                    </div>
+                `;
             return book;
         }
 
-        window.addEventListener('scroll', function () {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-                loadMoreBooks();
-            }
+        // Xử lý logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('role');
+            alert('You have logged out.');
+            window.location.href = '/statics/signin.html';
         });
 
-        bookDetailsModal.addEventListener('click', function (e) {
-            if (e.target === bookDetailsModal) {
-                closeBookDetailsModal();
-            }
-        });
-
-        borrowModal.addEventListener('click', function (e) {
-            if (e.target === borrowModal) {
-                closeBorrowModal();
-            }
-        });
-        // Function to filter books and display suggestions
-        search.addEventListener('input', function () {
-            const query = this.value.trim().toLowerCase();
-            suggestions.innerHTML = ''; // Clear previous suggestions
-
-            if (query) {
-                const matches = bookTitles.filter(title => title.toLowerCase().includes(query));
-                if (matches.length > 0) {
-                    matches.forEach(title => {
-                        const suggestionItem = document.createElement('div');
-                        suggestionItem.className = 'p-2 hover:bg-gray-100 cursor-pointer'; // Tailwind classes
-                        suggestionItem.textContent = title;
-                        suggestionItem.addEventListener('click', () => {
-                            search.value = title; // Fill the search bar with the selected title
-                            suggestions.innerHTML = ''; // Clear suggestions
-                            showBookDetails(title); // Show book details in the modal
-                        });
-                        suggestions.appendChild(suggestionItem);
-                    });
-                    suggestions.classList.remove('hidden');
-                } else {
-                    suggestions.classList.add('hidden');
-                }
-            } else {
-                suggestions.classList.add('hidden');
-            }
-        });
-
-        // Hide suggestions when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!search.contains(e.target) && !suggestions.contains(e.target)) {
-                suggestions.classList.add('hidden');
-            }
-        });
-
-        // Hàm Borrow sách
-        function borrowBook() {
-            const bookTitle = document.querySelector("#bookDetails h3").textContent; // Lấy tiêu đề sách từ modal
-            const bookAuthor = document.querySelector("#bookDetails p.text-lg").textContent.replace("by ", ""); // Lấy tên tác giả
-            const pickupDate = document.getElementById("pickupDate").value; // Ngày mượn
-            const returnDate = document.getElementById("returnDate").value; // Ngày trả
-
-            if (!pickupDate || !returnDate) {
-                alert("Please select a valid pickup and return date.");
-                return;
-            }
-
-            // Tạo đối tượng sách mượn
-            const borrowedBook = {
-                title: bookTitle,
-                author: bookAuthor,
-                pickupDate,
-                returnDate,
-                status: "Still Valid"
-            };
-
-            // Lưu sách vào localStorage
-            let borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || [];
-            borrowedBooks.push(borrowedBook);
-            localStorage.setItem("borrowedBooks", JSON.stringify(borrowedBooks));
-
-            // Đóng popup và thông báo thành công
-            closeBorrowModal();
-            alert("Book borrowed successfully!");
-        }
-
+        // Gọi hàm fetchBooks
+        document.addEventListener('DOMContentLoaded', fetchBooks);
     </script>
 </body>
 

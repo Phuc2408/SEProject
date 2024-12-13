@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+﻿const bcrypt = require('bcrypt');
 const { MongoClient } = require('mongodb');
 const client = new MongoClient('mongodb+srv://phamphuc240804:123@library.hnekp.mongodb.net/?retryWrites=true&w=majority&appName=Library');
 
@@ -15,12 +15,14 @@ async function findUserByEmailOrUsername(email, username) {
 }
 
 // Create a new user
-async function createUser(email, username, password) {
+async function createUser(email, username, password, role = 'user') {
     const collection = await getUserCollection();
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { email, username, password: hashedPassword };
+    const newUser = { email, username, password: hashedPassword, role }; // Lưu role vào MongoDB
     return await collection.insertOne(newUser);
 }
+
+
 
 // Check password validity
 async function checkPassword(inputPassword, storedPassword) {
