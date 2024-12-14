@@ -2,25 +2,29 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { getUserCollection, findUserByEmailOrUsername, createUser, checkPassword } = require('../services/userService');
+const e = require('express');
 
 const router = express.Router();
 const secretKey = 'your_secret_key'; // Secret key for JWT
 
 // Signup
 router.post('/signup', async (req, res) => {
-    const { email, username, password, role } = req.body; // Nhận thêm role từ body
+    const { email, username, password, name, id, phone, gender, role } = req.body; // Nhận thêm name, id, phone, gender từ body
 
-    if (!email || !username || !password) {
-        return res.status(400).json({ message: "All fields (email, username, password) are required" });
+    // Kiểm tra các trường bắt buộc
+    if (!email || !username || !password || !name || !id || !phone || !gender) {
+        return res.status(400).json({ message: "All fields (email, username, password, name, id, phone, gender) are required" });
     }
-
+    console.log(email, username, password, name, id, gender, phone, role);
+    // Kiểm tra xem email hoặc username đã tồn tại chưa
     const existingUser = await findUserByEmailOrUsername(email, username);
     if (existingUser) {
         return res.status(400).json({ message: existingUser.email === email ? "Email is already in use" : "Username is already taken" });
     }
 
     try {
-        const newUser = await createUser(email, username, password, role || 'user'); // Role mặc định là 'user'
+        // Tạo người dùng mới với thông tin đã nhận
+        const newUser = await createUser(email, username, password, name, id, phone, gender, role || 'user'); // Thêm name, id, phone, gender vào quá trình tạo người dùng
         res.status(201).json({ message: "Signup successful", userId: newUser.insertedId });
     } catch (error) {
         console.error("Error during signup:", error);
@@ -40,20 +44,34 @@ router.post('/signin', async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
-        // Log để kiểm tra role
+        // Log to check user details
         console.log('User fetched from DB:', user);
 
         const token = jwt.sign(
-            { userId: user._id, username: user.username, role: user.role }, // Thêm role vào payload
+            {
+                userId: user._id,
+                username: user.username,
+                role: user.role
+            }, // Add role to the payload
             secretKey,
             { expiresIn: '1h' }
         );
 
-        res.status(200).json({
+        // Prepare the response data
+        const responseData = {
             message: 'Login successful',
             token,
-            role: user.role, // Trả về role trong response
-        });
+            user: {
+                username: user.username,
+                email: user.email,
+                phone: user.phone,
+                name: user.name,
+                id: user._id.toString(),
+                role: user.role // Return role
+            }
+        };
+        console.log('Response data:', responseData);
+        res.status(200).json(responseData);
     } catch (error) {
         console.error('Error during signin:', error);
         res.status(500).json({ message: 'Server error during signin' });

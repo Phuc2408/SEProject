@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
@@ -8,13 +8,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 h-full">
     <header class="bg-white shadow p-4 flex justify-between items-center">
         <h1 class="text-2xl font-bold">Admin Dashboard</h1>
         <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded">Log Out</button>
     </header>
 
-    <div class="flex">
+    <div class="flex h-full">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 text-white p-4">
             <nav>
@@ -48,39 +48,48 @@
     </div>
 
     <script>
-        const token = localStorage.getItem('token');
-        const role = localStorage.getItem('role');
+        // Ensure the DOM is loaded before executing
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
 
-        // Check if user is logged in and has admin access
-        if (!token || role !== 'admin') {
-            alert('Access denied. Redirecting to login page.');
-            window.location.href = '/statics/signin.html';
-        }
+            // Parse the user string into an object
+            const parsedUser = user ? JSON.parse(user) : null;
+            const role = parsedUser ? parsedUser.role : null;
 
-        // Logout function
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('role');
-            alert('You have logged out.');
-            window.location.href = '/statics/signin.html';
-        });
+            console.log(token);
+            console.log(role);
 
-        // Fetch books and display in the table
-        async function fetchBooks() {
-            try {
-                const response = await fetch('http://localhost:5000/api/admin/books', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+            // Check if user is logged in and has admin access
+            if (!token || role !== 'admin') {
+                alert('Access denied. Redirecting to login page.');
+                window.location.href = '/statics/signin.html';
+            }
 
-                if (!response.ok) {
-                    alert('Failed to fetch books. Redirecting to login.');
-                    window.location.href = '/statics/signin.html';
-                    return;
-                }
+            // Logout function
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                alert('You have logged out.');
+                window.location.href = '/statics/signin.html';
+            });
 
-                const books = await response.json();
-                const bookTable = document.getElementById('bookTable').querySelector('tbody');
-                bookTable.innerHTML = books.map(book => `
+            // Fetch books and display in the table
+            async function fetchBooks() {
+                try {
+                    const response = await fetch('http://localhost:5000/api/admin/books', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    if (!response.ok) {
+                        alert('Failed to fetch books. Redirecting to login.');
+                        window.location.href = '/statics/signin.html';
+                        return;
+                    }
+
+                    const books = await response.json();
+                    const bookTable = document.getElementById('bookTable').querySelector('tbody');
+                    bookTable.innerHTML = books.map(book => `
                         <tr>
                             <td class="border px-4 py-2">${book.title}</td>
                             <td class="border px-4 py-2">${book.author}</td>
@@ -89,63 +98,64 @@
                             </td>
                         </tr>
                     `).join('');
-            } catch (error) {
-                console.error('Error fetching books:', error);
-                alert('An error occurred while fetching books.');
+                } catch (error) {
+                    console.error('Error fetching books:', error);
+                    alert('An error occurred while fetching books.');
+                }
             }
-        }
 
-        // Add book
-        document.getElementById('addBookBtn').addEventListener('click', async () => {
-            const title = prompt('Enter book title');
-            const author = prompt('Enter book author');
+            // Add book
+            document.getElementById('addBookBtn').addEventListener('click', async () => {
+                const title = prompt('Enter book title');
+                const author = prompt('Enter book author');
 
-            if (title && author) {
+                if (title && author) {
+                    try {
+                        const response = await fetch('http://localhost:5000/api/admin/books', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${token}`
+                            },
+                            body: JSON.stringify({ title, author })
+                        });
+
+                        if (!response.ok) {
+                            alert('Failed to add book.');
+                            return;
+                        }
+
+                        fetchBooks();
+                    } catch (error) {
+                        console.error('Error adding book:', error);
+                        alert('An error occurred while adding the book.');
+                    }
+                }
+            });
+
+            // Delete book
+            async function deleteBook(bookId) {
                 try {
-                    const response = await fetch('http://localhost:5000/api/admin/books', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ title, author })
+                    const response = await fetch(`http://localhost:5000/api/admin/books/${bookId}`, {
+                        method: 'DELETE',
+                        headers: { Authorization: `Bearer ${token}` }
                     });
 
                     if (!response.ok) {
-                        alert('Failed to add book.');
+                        alert('Failed to delete book.');
                         return;
                     }
 
                     fetchBooks();
                 } catch (error) {
-                    console.error('Error adding book:', error);
-                    alert('An error occurred while adding the book.');
+                    console.error('Error deleting book:', error);
+                    alert('An error occurred while deleting the book.');
                 }
             }
+
+            // Initial load
+            fetchBooks();
         });
-
-        // Delete book
-        async function deleteBook(bookId) {
-            try {
-                const response = await fetch(`http://localhost:5000/api/admin/books/${bookId}`, {
-                    method: 'DELETE',
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-
-                if (!response.ok) {
-                    alert('Failed to delete book.');
-                    return;
-                }
-
-                fetchBooks();
-            } catch (error) {
-                console.error('Error deleting book:', error);
-                alert('An error occurred while deleting the book.');
-            }
-        }
-
-        // Initial load
-        fetchBooks();
     </script>
 </body>
 

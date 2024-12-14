@@ -15,12 +15,25 @@ async function findUserByEmailOrUsername(email, username) {
 }
 
 // Create a new user
-async function createUser(email, username, password, role = 'user') {
+async function createUser(email, username, password, name, id, phone, gender, role = 'user') {
     const collection = await getUserCollection();
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { email, username, password: hashedPassword, role }; // Lưu role vào MongoDB
+
+    const newUser = {
+        email,
+        username,
+        password: hashedPassword,
+        name,
+        id,
+        phone,
+        gender,
+        role
+    };
+
+    // Thêm người dùng vào MongoDB
     return await collection.insertOne(newUser);
 }
+
 
 
 
