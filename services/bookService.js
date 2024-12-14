@@ -1,4 +1,4 @@
-﻿const { MongoClient } = require('mongodb');
+﻿const { MongoClient, ObjectId } = require('mongodb'); // Import ObjectId đúng
 const { client } = require('../config/db'); // Import client từ file config/db.js
 
 // Hàm lấy danh sách sách
@@ -29,7 +29,7 @@ async function addBook(book) {
 async function deleteBook(bookId) {
     try {
         const db = client.db("Library"); // Đảm bảo sử dụng đúng tên database
-        const result = await db.collection("books").deleteOne({ _id: new MongoClient.ObjectId(bookId) });
+        const result = await db.collection("books").deleteOne({ _id: new ObjectId(bookId) }); // Sử dụng ObjectId chính xác
         return result;
     } catch (error) {
         console.error("Error deleting book:", error);

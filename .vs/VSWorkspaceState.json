@@ -4,8 +4,11 @@
     "\\api",
     "\\config",
     "\\middleware",
+    "\\public",
+    "\\public\\statics",
+    "\\public\\statics\\admin",
     "\\services"
   ],
-  "SelectedNode": "\\config\\db.js",
+  "SelectedNode": "\\services\\bookService.js",
   "PreviewInSolutionExplorer": false
 }
