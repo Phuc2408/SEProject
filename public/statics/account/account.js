@@ -1,25 +1,35 @@
 // Load user data from localStorage when page loads
 document.addEventListener('DOMContentLoaded', function () {
-    // Retrieve username from localStorage
-    const user = localStorage.getItem(user);
 
-    // If no user is found in localStorage, redirect to sign-in page
-    if (!user) {
+    // // Retrieve username from localStorage
+    // const user = localStorage.getItem(user);
+
+    // // If no user is found in localStorage, redirect to sign-in page
+    // if (!user) {
+    //     alert('User not logged in. Redirecting to sign in page.');
+    //     window.location.href = '../signin/index.html'; // Redirect to sign-in page if no username
+    //     return;
+    // }
+
+    // // Display username in the account section
+    // document.getElementById('accountName').textContent = username;
+
+    // Retrieve user data from localStorage as a parsed object
+    const userData = JSON.parse(localStorage.getItem('user')) || {};
+    if (!userData) {
         alert('User not logged in. Redirecting to sign in page.');
         window.location.href = '../signin/index.html'; // Redirect to sign-in page if no username
         return;
     }
+    // Log userData to check its structure
+    console.log(userData);  // This will show the user object in the console
 
-    // Display username in the account section
-    document.getElementById('accountName').textContent = username;
-
-    // Retrieve user data from localStorage (e.g., email, phone, etc.)
-    const userData = JSON.parse(localStorage.getItem('user')) || {};
-    console.log(user);  // Log user data to check its structure
-
-    // Display full name, email, and phone in the form
-    document.getElementById('fullName').value = user.name;
-    document.getElementById('email').value = user.email;
+    // Set form fields with the data from userData
+    document.getElementById("accountName").textContent = userData.username || "";
+    document.getElementById("name").value = userData.name || "";
+    document.getElementById("email").value = userData.email || "";
+    document.getElementById("idNumber").value = userData.id || "";
+    document.getElementById("phone").value = userData.phone || "";
 
     const phone = userData.phone; // If no phone number, leave it blank
     document.getElementById('phone').value = phone;

@@ -82,16 +82,6 @@
             <!-- Account Info -->
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <div class="flex items-center mb-6">
-                    <div class="relative">
-                        <img id="avatarPreview" src="../assets/image/default user.jpg" alt="Avatar"
-                            class="w-32 h-32 bg-gray-300 rounded-full object-cover">
-                        <input id="avatarInput" type="file" accept="image/*"
-                            class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gray-200 cursor-pointer opacity-0">
-                        <label for="avatarInput"
-                            class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer">
-                            <i class="fas fa-pencil-alt text-gray-600"></i>
-                        </label>
-                    </div>
                     <div class="ml-6">
                         <p id="accountName" class="text-xl font-semibold"></p>
                         <button id="changePasswordBtn" class="text-blue-500 hover:underline">Change Password</button>
@@ -103,22 +93,22 @@
                     <div>
                         <label for="name" class="block text-gray-700">Name</label>
                         <input type="text" id="name" placeholder="Enter your name"
-                            class="w-full p-3 border border-gray-300 rounded-lg">
+                            class="w-full p-3 border border-gray-300 rounded-lg" >
                     </div>
                     <div>
                         <label for="email" class="block text-gray-700">Email</label>
                         <input type="email" id="email" placeholder="Enter your email"
-                            class="w-full p-3 border border-gray-300 rounded-lg">
+                            class="w-full p-3 border border-gray-300 rounded-lg" disabled>
                     </div>
                     <div>
                         <label for="idNumber" class="block text-gray-700">ID Number</label>
                         <input type="text" id="idNumber" placeholder="Enter your ID number"
-                            class="w-full p-3 border border-gray-300 rounded-lg">
+                            class="w-full p-3 border border-gray-300 rounded-lg" disabled>
                     </div>
                     <div>
                         <label for="phone" class="block text-gray-700">Phone Number</label>
                         <input type="tel" id="phone" placeholder="Enter your phone number"
-                            class="w-full p-3 border border-gray-300 rounded-lg">
+                            class="w-full p-3 border border-gray-300 rounded-lg" disabled>
                     </div>
                     <div class="flex justify-end">
                         <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800">Save
