@@ -33,6 +33,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library - Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./account.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -41,7 +42,7 @@
     <!-- Header -->
     <header class="bg-white p-4 flex justify-between items-center">
         <div class="flex items-center">
-            <img src="../assets/image/logo.png" alt="BookHub Logo" class="h-8 w-auto mr-2">
+            <img src="/assets/image/logo.png" alt="Library Logo" class="w-10 h-10 mr-3">
             <h1 class="text-black text-xl font-bold">Library</h1>
         </div>
     </header>
@@ -53,22 +54,22 @@
             <nav>
                 <ul>
                     <li class="mb-4">
-                        <a href="./homepage.html"
+                        <a href="/statics/homepage/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-book"></i><span class="ml-2">Catalog</span></a>
                     </li>
                     <li class="mb-4">
-                        <a href="./account.html"
+                        <a href="/statics/account/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-user"></i><span class="ml-2">Account</span></a>
                     </li>
                     <li class="mb-4">
-                        <a href="./history.html"
+                        <a href="/statics/history/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-history"></i><span class="ml-2">History</span></a>
                     </li>
                     <li>
-                        <a href="./signin.html"
+                        <a href="/statics/signin/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span></a>
                     </li>
@@ -156,57 +157,7 @@
     </div>
 
 
-    <script>
-        // Load user data from localStorage when page loads
-        document.addEventListener('DOMContentLoaded', function () {
-            // Retrieve username from localStorage
-            const user = localStorage.getItem(user);
 
-            // If no user is found in localStorage, redirect to sign-in page
-            if (!user) {
-                alert('User not logged in. Redirecting to sign in page.');
-                window.location.href = '/statics/signin.html'; // Redirect to sign-in page if no username
-                return;
-            }
-
-            // Display username in the account section
-            document.getElementById('accountName').textContent = username;
-
-            // Retrieve user data from localStorage (e.g., email, phone, etc.)
-            const userData = JSON.parse(localStorage.getItem('user')) || {};
-            console.log(user);  // Log user data to check its structure
-
-            // Display full name, email, and phone in the form
-            document.getElementById('fullName').value = user.name;
-            document.getElementById('email').value = user.email;
-
-            const phone = userData.phone; // If no phone number, leave it blank
-            document.getElementById('phone').value = phone;
-        });
-
-        // Handle the form submission to update user data in localStorage
-        document.getElementById('accountForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevent form from reloading the page
-
-            const phone = document.getElementById('phone').value.trim();
-
-            if (!phone) {
-                alert('Please enter a valid phone number');
-                return;
-            }
-
-            // Retrieve current user data from localStorage
-            const userData = JSON.parse(localStorage.getItem('userData')) || {};
-
-            // Update the phone number in the user data
-            userData.phone = phone;
-
-            // Save the updated user data back to localStorage
-            localStorage.setItem('userData', JSON.stringify(userData));
-
-            alert('Phone number saved successfully!');
-        });
-    </script>
 
 </body>
 

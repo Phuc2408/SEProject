@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Fallback route for all other requests to serve the frontend
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'statics', 'homepage.html'));
+  res.sendFile(path.join(__dirname, 'public', 'statics', 'homepage', 'index.html'));
 });
 
 // Start server

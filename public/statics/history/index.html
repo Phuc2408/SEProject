@@ -7,6 +7,7 @@
     <title>Library - Homepage</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="./history.js" defer></script>
 </head>
 
 <body class="bg-cyan-100">
@@ -34,12 +35,12 @@
             <nav>
                 <ul>
                     <li class="mb-4">
-                        <a href="/statics/homepage.html"
+                        <a href="/statics/homepage/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-book"></i><span class="ml-2">Catalog</span></a>
                     </li>
                     <li class="mb-4">
-                        <a href="/statics/account.html"
+                        <a href="/statics/account/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-user"></i><span class="ml-2">Account</span></a>
                     </li>
@@ -49,7 +50,7 @@
                                 class="fas fa-history"></i><span class="ml-2">History</span></a>
                     </li>
                     <li>
-                        <a href="/statics/signin.html"
+                        <a href="/statics/signin/index.html"
                             class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
                                 class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span></a>
                     </li>
@@ -177,26 +178,6 @@
             </div>
         </div>
 
-        <!-- js -->
-        <script>
-
-            function openExtendPopup() {
-                document.getElementById('extendPopup').classList.remove('hidden');
-            }
-
-            function closeExtendPopup() {
-                document.getElementById('extendPopup').classList.add('hidden');
-            }
-
-            function openLostPopup() {
-                document.getElementById('lostPopup').classList.remove('hidden');
-            }
-
-            function closeLostPopup() {
-                document.getElementById('lostPopup').classList.add('hidden');
-            }
-
-        </script>
 </body>
 
 </html>
