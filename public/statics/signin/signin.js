@@ -38,7 +38,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         if (data.user.role == 'admin') {
             window.location.href = "/statics/admin/index.html"// Trang dành cho admin
         } else {
-            window.location.href = '/statics/homepage.html'; // Trang dành cho user
+            window.location.href = '/statics/homepage/index.html'; // Trang dành cho user
         }
     } catch (error) {
         console.error('Error during signin:', error);
