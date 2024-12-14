@@ -36,7 +36,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
 
         // Chuyển hướng dựa trên vai trò
         if (data.user.role == 'admin') {
-            window.location.href = "/statics/admin.html"// Trang dành cho admin
+            window.location.href = "/statics/admin/index.html"// Trang dành cho admin
         } else {
             window.location.href = '/statics/homepage.html'; // Trang dành cho user
         }
