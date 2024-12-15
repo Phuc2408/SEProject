@@ -6,9 +6,8 @@
     "\\middleware",
     "\\public",
     "\\public\\statics",
-    "\\public\\statics\\admin",
     "\\services"
   ],
-  "SelectedNode": "\\services\\bookService.js",
+  "SelectedNode": "\\public\\statics\\account",
   "PreviewInSolutionExplorer": false
 }

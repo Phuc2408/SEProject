@@ -1,4 +1,4 @@
-const search = document.getElementById('search');
+﻿const search = document.getElementById('search');
 const suggestions = document.getElementById('suggestions');
 const bookDetailsModal = document.getElementById('bookDetailsModal');
 const borrowModal = document.getElementById('borrowModal');
@@ -34,8 +34,8 @@ function showBookDetails(bookId) {
         Close
     </button>
     
-    <button onclick="showBorrowModal()" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">
-        Borrow
+    <button onclick="showBorrowModal('${book._id}')" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+    Borrow
     </button>
 </div>
 
@@ -50,9 +50,24 @@ function closeBookDetailsModal() {
 }
 
 // Show the borrow modal
-function showBorrowModal() {
+let currentBookId = null; // Biến toàn cục lưu bookId
+
+function showBorrowModal(bookId) {
+    currentBookId = bookId; // Lưu bookId hiện tại
+    const pickupDateInput = document.getElementById('pickupDate');
+    const returnDateInput = document.getElementById('returnDate');
+
+    // Tính ngày trả sách mặc định (30 ngày sau ngày mượn)
+    const today = new Date();
+    pickupDateInput.valueAsDate = today;
+
+    const returnDate = new Date();
+    returnDate.setDate(today.getDate() + 30);
+    returnDateInput.valueAsDate = returnDate;
+
     borrowModal.classList.remove('hidden');
 }
+
 
 // Close the borrow modal
 function closeBorrowModal() {
@@ -140,6 +155,8 @@ function createBookElement(book) {
 let loadedBooks = 0;
 window.addEventListener('scroll', function () {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+        if (loadedBooks >= booksData.length) return;
+
         loadMoreBooks();
     }
 });
@@ -159,6 +176,39 @@ function loadMoreBooks() {
 
 // Event listener for the genre filter
 genreFilter.addEventListener('change', filterBooksByGenre);
+
+document.getElementById('borrowForm').addEventListener('submit', async function (e) {
+    e.preventDefault(); // Ngăn form reload trang
+
+    const pickupDate = document.getElementById('pickupDate').value;
+    const returnDate = document.getElementById('returnDate').value;
+
+    try {
+        const response = await fetch('/api/user-books/borrow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}` // Token phải được lưu trong LocalStorage
+            },
+            body: JSON.stringify({
+                bookId: currentBookId, // Gửi bookId hiện tại
+                returnDate
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to borrow book.');
+        }
+
+        alert('Book borrowed successfully!');
+        closeBorrowModal();
+        loadBooks(); // Làm mới danh sách sách
+    } catch (error) {
+        console.error('Error borrowing book:', error);
+        alert('Failed to borrow book. Please try again.');
+    }
+});
+
 
 // Initialize the app on page load
 document.addEventListener('DOMContentLoaded', function () {

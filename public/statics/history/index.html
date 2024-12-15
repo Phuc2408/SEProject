@@ -2,9 +2,15 @@
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Montserrat", Helvetica, sans-serif;
+        }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library - Homepage</title>
+    <title>Library - Borrowed Books</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="./history.js" defer></script>
@@ -16,14 +22,14 @@
     <header class="bg-white p-4 flex justify-between items-center">
         <div class="flex items-center">
             <img src="/assets/image/logo.png" alt="BookHub Logo" class="h-8 w-auto mr-2">
-            <h1 class="text-back text-xl font-bold">Library</h1>
+            <h1 class="text-black text-xl font-bold">Library</h1>
         </div>
         <div class="relative">
-            <input id="search" type="text" placeholder="Search books..."
-                class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
+            <input id="search" type="text" placeholder="Search borrowed books..."
+                   class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
             <button class="absolute right-3 top-2 text-gray-600"><i class="fas fa-search"></i></button>
             <div id="suggestions" class="hidden absolute top-full mt-1 bg-white w-full shadow-md rounded">
-                <!-- Search suggestions can appear here -->
+                <!-- Search suggestions will appear here -->
             </div>
         </div>
     </header>
@@ -36,148 +42,80 @@
                 <ul>
                     <li class="mb-4">
                         <a href="/statics/homepage/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-book"></i><span class="ml-2">Catalog</span></a>
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-book"></i><span class="ml-2">Catalog</span>
+                        </a>
                     </li>
                     <li class="mb-4">
                         <a href="/statics/account/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-user"></i><span class="ml-2">Account</span></a>
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-user"></i><span class="ml-2">Account</span>
+                        </a>
                     </li>
                     <li class="mb-4">
-                        <a href="#"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-history"></i><span class="ml-2">History</span></a>
+                        <a href="/statics/history/index.html"
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-history"></i><span class="ml-2">History</span>
+                        </a>
                     </li>
-                    <li>
+                    <li onclick="logOut()">
                         <a href="/statics/signin/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i
-                                class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span></a>
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span>
+                        </a>
                     </li>
                 </ul>
             </nav>
         </aside>
 
-        <!--Hiển thị danh sách sách-->
-        <div class="p-6">
-            <h1 class="text-3xl font-bold mb-4">Borrowed Books</h1>
-            <div class="relative mb-4 flex justify-center">
-                <input type="text" placeholder="Filter..."
-                    class="py-2 px-4 overflow-x-auto w-[1200px] mx-auto rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-300">
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold">Borrowed Books</h2>
             </div>
-            <!-- Container để giới hạn chiều rộng bảng -->
-            <div class="overflow-x-auto max-w-full mx-auto">
-                <table class="w-full border-collapse bg-white shadow rounded-lg">
-                    <thead>
-                        <tr class="bg-gray-200 text-left">
-                            <th class="p-3">Book</th>
-                            <th class="p-3">Due Date</th>
-                            <th class="p-3">Return Date</th>
-                            <th class="p-3">Status</th>
-                            <th class="p-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Hàng sách đang mượn -->
-                        <tr class="border-b">
-                            <td class="p-3 flex items-center">
-                                <img src="book_image_url" alt="Book cover" class="h-16 w-12 rounded shadow mr-3">
-                                <div>
-                                    <p class="font-semibold">Tuổi trẻ đáng giá bao nhiêu</p>
-                                    <p class="text-sm text-gray-500">by Rosie Nguyễn</p>
-                                </div>
-                            </td>
-                            <td class="p-3">2024-11-30</td>
-                            <td class="p-3">2024-12-05</td>
-                            <td class="p-3 text-green-500 font-semibold">Still Valid</td>
-                            <td class="grid grid-cols-3 gap-2">
-                                <button class="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
-                                    onclick="openExtendPopup()">Extend</button>
-                                <button class="flex-1 bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
-                                    onclick="openLostPopup()">Lost Book</button>
-                            </td>
-                        </tr>
-                        <!-- Thêm các mục sách khác tại đây -->
-                        <!-- Sách quá hạn (Overdue) -->
-                        <tr class="border-b">
-                            <td class="p-3 flex items-center">
-                                <img src="book_image_url" alt="Book cover" class="h-16 w-12 rounded shadow mr-3">
-                                <div>
-                                    <p class="font-semibold">The Great Gatsby</p>
-                                    <p class="text-sm text-gray-500">by F. Scott Fitzgerald</p>
-                                </div>
-                            </td>
-                            <td class="p-3">2024-11-15</td>
-                            <td class="p-3">--</td>
-                            <td class="p-3 text-red-500 font-semibold">Overdue</td>
-                            <td class="grid grid-cols-3 gap-2">
-                                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                                    onclick="openLostPopup()">Lost Book</button>
-                            </td>
-                        </tr>
-                        <!-- Sách đã trả (Returned) -->
-                        <tr class="border-b">
-                            <td class="p-3 flex items-center">
-                                <img src="https://picsum.photos/200/300" alt="Book cover"
-                                    class="h-16 w-12 rounded shadow mr-3">
-                                <div>
-                                    <p class="font-semibold">Đắc nhân tâm</p>
-                                    <p class="text-sm text-gray-500">by Dale Carnegie</p>
-                                </div>
-                            </td>
-                            <td class="p-3">2024-11-20</td>
-                            <td class="p-3">2024-11-25</td>
-                            <td class="p-3 text-gray-500 font-semibold">Returned</td>
-                            <td class="grid grid-cols-3 gap-2">
-                                <button
-                                    class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Review</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <section id="borrowedBooks" class="space-y-4">
+                <!-- Borrowed books will be dynamically rendered here -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Extend Popup -->
+    <div id="extendPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Extend Return Date</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">New Return Date</label>
+                <input id="newReturnDate" type="date" class="w-full p-2 border rounded">
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400" onclick="closeExtendPopup()">Cancel</button>
+                <button id="confirmExtend"
+                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    Confirm
+                </button>
+
             </div>
         </div>
+    </div>
 
+    <!-- Lost Popup -->
+    <div id="lostPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg max-w-md w-full">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Mark Book as Lost</h2>
+            <p class="mb-4">Are you sure you want to mark this book as lost? You may be charged a fine.</p>
+            <div class="flex justify-end space-x-4">
+                <button class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                        onclick="closeLostPopup()">
+                    Cancel
+                </button>
+                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+    onclick="markLost()">
+    Lost
+</button>
 
-        <!--- gia hạn --->
-        <div id="extendPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-            <div class="bg-white p-8 rounded-lg max-w-md w-full">
-                <h2 class="text-2xl font-bold mb-4">Extend</h2>
-                <div class="flex items-center mb-4">
-                    <img src="book_image_url" alt="Book cover" class="h-20 w-16 rounded shadow mr-4">
-                    <div>
-                        <p class="font-semibold text-lg">Tuổi trẻ đáng giá bao nhiêu</p>
-                        <p class="text-sm text-gray-500">by Rosie Nguyễn</p>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Current Return Date</label>
-                    <input type="date" class="w-full p-2 border rounded" value="2024-12-05" readonly>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">New Return Date</label>
-                    <input type="date" class="w-full p-2 border rounded">
-                </div>
-                <div class="flex justify-end space-x-4">
-                    <button class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                        onclick="closeExtendPopup()">Cancel</button>
-                    <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Renew</button>
-                </div>
             </div>
         </div>
-
-        <!--báo mất-->
-        <div id="lostPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-            <div class="bg-white p-8 rounded-lg max-w-md w-full">
-                <h2 class="text-2xl font-bold text-red-600 mb-4">You have lost this book?</h2>
-                <p class="mb-4">You have to pay <strong class="text-red-500">100,000 VND</strong> for losing it.</p>
-                <div class="flex justify-end space-x-4">
-                    <button class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                        onclick="closeLostPopup()">Cancel</button>
-                    <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Confirm</button>
-                </div>
-            </div>
-        </div>
+    </div>
 
 </body>
 

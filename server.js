@@ -14,16 +14,16 @@ const port = 5000;
 app.use(express.json());
 app.use(cors());
 
-//admin
-app.use('/api/admin', adminRoutes);
-
 // Connect to MongoDB
 connectDB();
+
 
 // Routes
 app.use('/api/auth', authRoutes);  // Auth-related routes (signup, signin)
 app.use('/api/users', userRoutes); // User-related routes
 app.use('/api/user-books', userBookRoutes); // Thêm API cho user-books
+app.use('/api/admin', adminRoutes);//admin
+
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
