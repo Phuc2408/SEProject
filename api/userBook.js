@@ -20,7 +20,7 @@ router.get('', async (req, res) => {
 router.post('/borrow', verifyToken, async (req, res) => {
     try {
         const { bookId, pickupDate, returnDate } = req.body; // Thêm pickupDate
-        const userId = req.user.userId;
+        const userId = req.user._id;
 
         const result = await borrowBook(userId, bookId, pickupDate, returnDate);
         res.status(201).json({
@@ -38,7 +38,7 @@ router.post('/borrow', verifyToken, async (req, res) => {
 // Endpoint xem danh sách sách đã mượn
 router.get('/borrowed', verifyToken, async (req, res) => {
     try {
-        const userId = req.user.userId; // Middleware verifyToken phải thêm userId vào req.user
+        const userId = req.user._id; // Middleware verifyToken phải thêm userId vào req.user
         const books = await getBorrowedBooks(userId);
         res.json(books); // Trả về danh sách sách đã mượn
     } catch (error) {
@@ -52,7 +52,7 @@ router.put('/extend/:borrowedBookId', verifyToken, async (req, res) => {
     try {
         const { borrowedBookId } = req.params;
         const { newReturnDate } = req.body;
-        const userId = req.user.userId;
+        const userId = req.user._id;
 
         console.log('UserId:', userId);
         console.log('BorrowedBookId:', borrowedBookId);
@@ -70,7 +70,7 @@ router.put('/extend/:borrowedBookId', verifyToken, async (req, res) => {
 router.put('/lost/:borrowedBookId', verifyToken, async (req, res) => {
     try {
         const { borrowedBookId } = req.params; // ID của giao dịch mượn
-        const userId = req.user.userId; // Lấy userId từ token
+        const userId = req.user._id; // Lấy userId từ token
 
         console.log('UserId:', userId);
         console.log('BorrowedBookId:', borrowedBookId);

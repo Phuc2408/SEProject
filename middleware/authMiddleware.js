@@ -1,4 +1,6 @@
 ﻿const jwt = require('jsonwebtoken');
+const { getUserCollection } = require('../services/userService');
+const { ObjectId } = require('mongodb');
 const secretKey = 'your_secret_key';
 
 function verifyToken(req, res, next) {
@@ -8,12 +10,18 @@ function verifyToken(req, res, next) {
         return res.status(401).json({ message: 'No token provided' });
     }
 
-    jwt.verify(token, secretKey, (err, decoded) => {
+    jwt.verify(token, secretKey, async (err, decoded) => {
         if (err) {
             console.error('Token verification failed:', err.message);
             return res.status(401).json({ message: 'Invalid or expired token' });
         }
-        req.user = decoded; // Gắn thông tin user vào req
+        const usersCollection = await getUserCollection();
+        const user = await usersCollection.findOne({ _id: new ObjectId(decoded.userId) });
+        if (!user) {
+            console.error('User not found in database');
+            return res.status(404).json({ message: 'User not found' });
+        }
+        req.user = user; // Gắn thông tin user vào req
         console.log('Token verified. User:', decoded);
         next();
     });

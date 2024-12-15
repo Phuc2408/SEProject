@@ -15,7 +15,7 @@ async function findUserByEmailOrUsername(email, username) {
 }
 
 // Create a new user
-async function createUser(email, username, password, name, id, phone, gender, role = 'user') {
+async function createUser(email, username, password, name, id, phone, gender, role = 'user', isBanned = false) {
     const collection = await getUserCollection();
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -27,15 +27,13 @@ async function createUser(email, username, password, name, id, phone, gender, ro
         id,
         phone,
         gender,
-        role
+        role,
+        isBanned // Thêm trường isBanned vào đối tượng người dùng
     };
 
     // Thêm người dùng vào MongoDB
     return await collection.insertOne(newUser);
 }
-
-
-
 
 // Check password validity
 async function checkPassword(inputPassword, storedPassword) {

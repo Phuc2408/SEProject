@@ -8,7 +8,7 @@ document.getElementById('signupForm').addEventListener('submit', async function 
     const name = document.getElementById('name').value;
     const id = document.getElementById('id').value;
     const phone = document.getElementById('phone').value;
-
+    const isBanned = false;
     // Lấy giá trị gender
     const gender = document.querySelector('input[name="gender"]:checked')?.value;
 
@@ -26,8 +26,10 @@ document.getElementById('signupForm').addEventListener('submit', async function 
         name: name,
         id: id,
         phone: phone,
-        gender: gender
+        gender: gender,
+        isBanned: isBanned // Thêm isBanned vào đối tượng userData
     };
+
 
     try {
         // Gửi yêu cầu POST tới API

@@ -27,16 +27,22 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         }
 
         const data = await response.json();
-        console.log(data);
-        // Store the whole user object in localStorage
+        console.log('Response data:', data);
+        // Kiểm tra nếu người dùng bị cấm
+        if (data.isBanned) {
+            alert('Your account is banned. Please contact support.');
+            return;
+        }
+
+        // Lưu đối tượng người dùng vào localStorage
         localStorage.setItem('user', JSON.stringify(data.user));
 
-        // Store the token separately
+        // Lưu token riêng biệt
         localStorage.setItem('token', data.token);
 
         // Chuyển hướng dựa trên vai trò
-        if (data.user.role == 'admin') {
-            window.location.href = "/statics/admin/index.html"// Trang dành cho admin
+        if (data.user.role === 'admin') {
+            window.location.href = "/statics/admin/index.html"; // Trang dành cho admin
         } else {
             window.location.href = '/statics/homepage/index.html'; // Trang dành cho user
         }

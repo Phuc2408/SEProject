@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Fallback route for all other requests to serve the frontend
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'statics', 'homepage', 'index.html'));
+  res.redirect("/statics/signin/index.html");
 });
 
 // Start server
