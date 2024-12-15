@@ -5,10 +5,11 @@
     "\\middleware",
     "\\public",
     "\\public\\statics",
+    "\\public\\statics\\admin",
     "\\public\\statics\\pickups",
     "\\public\\statics\\returns",
     "\\services"
   ],
-  "SelectedNode": "\\api\\admin.js",
+  "SelectedNode": "\\public\\statics\\admin\\index.html",
   "PreviewInSolutionExplorer": false
 }

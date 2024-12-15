@@ -1,108 +1,106 @@
-// Ensure the DOM is loaded before executing
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const role = user?.role;
 
-    // Parse the user string into an object
-    const parsedUser = user ? JSON.parse(user) : null;
-    const role = parsedUser ? parsedUser.role : null;
-
-    console.log(token);
-    console.log(role);
-
-    // Check if user is logged in and has admin access
     if (!token || role !== 'admin') {
         alert('Access denied. Redirecting to login page.');
         window.location.href = '../signin/index.html';
+        return;
     }
 
-    // Logout function
+    const addBookModal = document.getElementById('addBookModal');
+    const addBookForm = document.getElementById('addBookForm');
+    const bookTableBody = document.getElementById('bookTable').querySelector('tbody');
+
+    // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        alert('You have logged out.');
-        window.location.href = '/statics/signin/index.html';
+        localStorage.clear();
+        alert('Logged out successfully.');
+        window.location.href = '../signin/index.html';
     });
 
-    // Fetch books and display in the table
+    // Open modal
+    document.getElementById('addBookBtn').addEventListener('click', () => {
+        addBookModal.classList.remove('hidden');
+    });
+
+    // Close modal
+    window.closeAddBookModal = () => {
+        addBookModal.classList.add('hidden');
+    };
+
+    // Fetch books
     async function fetchBooks() {
         try {
             const response = await fetch('http://localhost:5000/api/admin/books', {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
             });
-
-            if (!response.ok) {
-                alert('Failed to fetch books. Redirecting to login.');
-                window.location.href = '../signin/index.html';
-                return;
-            }
-
+            if (!response.ok) throw new Error('Failed to fetch books');
             const books = await response.json();
-            const bookTable = document.getElementById('bookTable').querySelector('tbody');
-            bookTable.innerHTML = books.map(book => `
-                        <tr>
-                            <td class="border px-4 py-2">${book.title}</td>
-                            <td class="border px-4 py-2">${book.author}</td>
-                            <td class="border px-4 py-2">
-                                <button onclick="deleteBook('${book._id}')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
-                            </td>
-                        </tr>
-                    `).join('');
+            renderBooks(books);
         } catch (error) {
             console.error('Error fetching books:', error);
-            alert('An error occurred while fetching books.');
+            alert('Failed to load books.');
         }
     }
 
+    // Render books
+    function renderBooks(books) {
+        bookTableBody.innerHTML = books.map(book => `
+            <tr>
+                <td class="border px-4 py-2">${book.title}</td>
+                <td class="border px-4 py-2">${book.author}</td>
+                <td class="border px-4 py-2">${book.genre}</td>
+                <td class="border px-4 py-2">${book.year}</td>
+                <td class="border px-4 py-2">
+                    <button onclick="deleteBook('${book._id}')" class="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
     // Add book
-    document.getElementById('addBookBtn').addEventListener('click', async () => {
-        const title = prompt('Enter book title');
-        const author = prompt('Enter book author');
+    addBookForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('bookTitle').value;
+        const author = document.getElementById('bookAuthor').value;
+        const genre = document.getElementById('bookGenre').value;
+        const year = document.getElementById('bookYear').value;
 
-        if (title && author) {
-            try {
-                const response = await fetch('http://localhost:5000/api/admin/books', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ title, author })
-                });
-
-                if (!response.ok) {
-                    alert('Failed to add book.');
-                    return;
-                }
-
-                fetchBooks();
-            } catch (error) {
-                console.error('Error adding book:', error);
-                alert('An error occurred while adding the book.');
-            }
+        try {
+            const response = await fetch('http://localhost:5000/api/admin/books', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ title, author, genre, year }),
+            });
+            if (!response.ok) throw new Error('Failed to add book');
+            closeAddBookModal();
+            fetchBooks();
+        } catch (error) {
+            console.error('Error adding book:', error);
+            alert('Failed to add book.');
         }
     });
 
     // Delete book
-    async function deleteBook(bookId) {
+    window.deleteBook = async (bookId) => {
         try {
             const response = await fetch(`http://localhost:5000/api/admin/books/${bookId}`, {
                 method: 'DELETE',
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}` },
             });
-
-            if (!response.ok) {
-                alert('Failed to delete book.');
-                return;
-            }
-
+            if (!response.ok) throw new Error('Failed to delete book');
             fetchBooks();
         } catch (error) {
             console.error('Error deleting book:', error);
-            alert('An error occurred while deleting the book.');
+            alert('Failed to delete book.');
         }
-    }
+    };
 
-    // Initial load
+    // Initialize
     fetchBooks();
 });
