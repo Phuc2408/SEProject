@@ -25,7 +25,7 @@
                     <li><a href="#" class="block py-2 hover:bg-gray-700 rounded">Manage Users</a></li>
                     <li><a href="#" class="block py-2 hover:bg-gray-700 rounded">Reports</a></li>
                     <li><a href="#" class="block py-2 bg-gray-700 rounded">Manage Pickups</a></li>
-                    <li><a href="/statics/returns/returns.html" class="block py-2 bg-gray-700 rounded">Manage Returns</a></li>
+                    <li><a href="/statics/returns/returns.html" class="block py-2 hover:bg-gray-700 rounded">Manage Returns</a></li>
                 </ul>
             </nav>
         </aside>
@@ -34,6 +34,23 @@
         <main class="flex-1 p-8">
             <section id="managePickups" class="mb-8">
                 <h2 class="text-xl font-bold mb-4">Book Pickup Management</h2>
+
+                <!-- Date Filter -->
+                <div class="flex items-center space-x-4 mb-4">
+                    <div>
+                        <label for="filterStartDate" class="block text-gray-700 mb-2 text-sm">Start Date:</label>
+                        <input type="date" id="filterStartDate" class="p-2 border rounded">
+                    </div>
+                    <div>
+                        <label for="filterEndDate" class="block text-gray-700 mb-2 text-sm">End Date:</label>
+                        <input type="date" id="filterEndDate" class="p-2 border rounded">
+                    </div>
+                    <button id="applyFilter" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Apply Filter</button>
+                    <button id="resetFilter" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Reset</button>
+                </div>
+
+
+                <!-- Table -->
                 <table class="table-auto w-full bg-white shadow-md rounded-lg border-collapse border border-gray-300">
                     <thead>
                         <tr class="bg-gray-200">

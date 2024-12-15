@@ -12,6 +12,7 @@ async function fetchPickups() {
         if (!response.ok) throw new Error('Failed to fetch pickups');
 
         const pickups = await response.json();
+        window.originalPickupData = pickups; // Lưu dữ liệu gốc
         displayPickups(pickups);
     } catch (error) {
         console.error('Error fetching pickups:', error.message);
@@ -19,26 +20,22 @@ async function fetchPickups() {
 }
 
 // Display pickups in the table
-function displayPickups(pickups) {
+function displayPickups(data) {
     pickupList.innerHTML = ''; // Clear previous content
 
-    if (pickups.length === 0) {
-        pickupList.innerHTML = '<tr><td colspan="4" class="text-center p-4">No book pickups for today</td></tr>';
+    if (data.length === 0) {
+        pickupList.innerHTML = '<tr><td colspan="4" class="text-center p-4">No pickups found</td></tr>';
         return;
     }
 
-    pickups.forEach(pickup => {
-        const username = pickup.username ? pickup.username : 'N/A'; // Hiển thị N/A nếu username không tồn tại
-
+    data.forEach(item => {
         const row = document.createElement('tr');
-        row.classList.add('border-b', 'hover:bg-gray-100'); // Add row styles
-
         row.innerHTML = `
-            <td class="p-4 border text-center">${pickup.bookTitle}</td>
-            <td class="p-4 border text-center">${username}</td>
-            <td class="p-4 border text-center">${new Date(pickup.borrowDate).toLocaleDateString()}</td>
-            <td class="p-4 border text-center">
-                <button class="btn-success" onclick="confirmPickup('${pickup._id}')">Confirm</button>
+            <td class="p-4 border">${item.bookTitle}</td>
+            <td class="p-4 border">${item.username || 'N/A'}</td>
+            <td class="p-4 border">${new Date(item.borrowDate).toLocaleDateString()}</td>
+            <td class="p-4 border">
+                <button class="btn-success" onclick="confirmPickup('${item._id}')">Confirm</button>
             </td>
         `;
         pickupList.appendChild(row);
@@ -61,8 +58,6 @@ async function confirmPickup(pickupId) {
         const token = localStorage.getItem('token');
         if (!token) throw new Error('Token not found. Please log in again.');
 
-        console.log('Token being used:', token);
-
         const response = await fetch(`/api/admin/confirm-pickup/${pickupId}`, {
             method: 'PUT',
             headers: {
@@ -82,6 +77,41 @@ async function confirmPickup(pickupId) {
         alert(`Failed to confirm pickup: ${error.message}`);
     }
 }
+
+// Filter pickups by date
+function filterByDate() {
+    const startDate = new Date(document.getElementById('filterStartDate').value);
+    const endDate = new Date(document.getElementById('filterEndDate').value);
+    const originalData = window.originalPickupData || []; // Dữ liệu gốc từ API
+
+    if (!startDate || !endDate || startDate > endDate) {
+        alert('Please select a valid date range.');
+        return;
+    }
+
+    // Lọc dữ liệu trả sách theo ngày
+    const filteredData = originalData.filter(item => {
+        const pickupDate = new Date(item.borrowDate);
+        return pickupDate >= startDate && pickupDate <= endDate;
+    });
+
+    displayPickups(filteredData); // Hiển thị dữ liệu đã lọc
+}
+
+
+// Reset filter
+function resetFilter() {
+    document.getElementById('filterStartDate').value = '';
+    document.getElementById('filterEndDate').value = '';
+    displayPickups(window.originalPickupData || []); // Display original data
+}
+document.getElementById('applyFilter').addEventListener('click', filterByDate);
+
+document.getElementById('resetFilter').addEventListener('click', () => {
+    document.getElementById('filterStartDate').value = '';
+    document.getElementById('filterEndDate').value = '';
+    displayPickups(window.originalPickupData || []); // Hiển thị dữ liệu gốc
+});
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', fetchPickups);

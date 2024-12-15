@@ -12,6 +12,7 @@ async function fetchReturns() {
         if (!response.ok) throw new Error('Failed to fetch returns');
 
         const returns = await response.json();
+        window.originalReturnData = returns; // Lưu dữ liệu gốc
         displayReturns(returns);
     } catch (error) {
         console.error('Error fetching returns:', error.message);
@@ -19,26 +20,23 @@ async function fetchReturns() {
 }
 
 // Display returns in the table
-function displayReturns(returns) {
-    returnList.innerHTML = ''; // Clear previous content
+function displayReturns(data) {
+    const returnList = document.getElementById('returnList');
+    returnList.innerHTML = ''; // Xóa nội dung cũ
 
-    if (returns.length === 0) {
-        returnList.innerHTML = '<tr><td colspan="4" class="text-center p-4">No book returns for today</td></tr>';
+    if (data.length === 0) {
+        returnList.innerHTML = '<tr><td colspan="4" class="text-center p-4">No returns found</td></tr>';
         return;
     }
 
-    returns.forEach(returnItem => {
-        const username = returnItem.username ? returnItem.username : 'N/A'; // Hiển thị N/A nếu username không tồn tại
-
+    data.forEach(item => {
         const row = document.createElement('tr');
-        row.classList.add('border-b', 'hover:bg-gray-100'); // Add row styles
-
         row.innerHTML = `
-            <td class="p-4 border text-center">${returnItem.bookTitle}</td>
-            <td class="p-4 border text-center">${username}</td>
-            <td class="p-4 border text-center">${new Date(returnItem.returnDate).toLocaleDateString()}</td>
-            <td class="p-4 border text-center">
-                <button class="btn-success" onclick="confirmReturn('${returnItem._id}')">Confirm Return</button>
+            <td class="p-4 border">${item.bookTitle}</td>
+            <td class="p-4 border">${item.username || 'N/A'}</td>
+            <td class="p-4 border">${new Date(item.returnDate).toLocaleDateString()}</td>
+            <td class="p-4 border">
+                <button class="btn-success" onclick="confirmReturn('${item._id}')">Confirm</button>
             </td>
         `;
         returnList.appendChild(row);
@@ -79,6 +77,32 @@ async function confirmReturn(returnId) {
         console.error('Error confirming return:', error.message);
         alert(`Failed to confirm return: ${error.message}`);
     }
+}
+
+
+function filterByDate() {
+    const startDate = new Date(document.getElementById('filterStartDate').value);
+    const endDate = new Date(document.getElementById('filterEndDate').value);
+    const originalData = window.originalReturnData || []; // Dữ liệu gốc từ API
+
+    if (!startDate || !endDate || startDate > endDate) {
+        alert('Please select a valid date range.');
+        return;
+    }
+
+    // Lọc dữ liệu trả sách theo ngày
+    const filteredData = originalData.filter(item => {
+        const returnDate = new Date(item.returnDate);
+        return returnDate >= startDate && returnDate <= endDate;
+    });
+
+    displayReturns(filteredData); // Hiển thị dữ liệu đã lọc
+}
+
+function resetFilter() {
+    document.getElementById('filterStartDate').value = '';
+    document.getElementById('filterEndDate').value = '';
+    displayReturns(window.originalReturnData || []); // Hiển thị lại dữ liệu gốc
 }
 
 // Initialize the page

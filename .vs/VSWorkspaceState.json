@@ -5,12 +5,10 @@
     "\\middleware",
     "\\public",
     "\\public\\statics",
-    "\\public\\statics\\history",
-    "\\public\\statics\\homepage",
+    "\\public\\statics\\pickups",
     "\\public\\statics\\returns",
-    "\\public\\statics\\signin",
     "\\services"
   ],
-  "SelectedNode": "\\services\\bookService.js",
+  "SelectedNode": "\\api\\admin.js",
   "PreviewInSolutionExplorer": false
 }
