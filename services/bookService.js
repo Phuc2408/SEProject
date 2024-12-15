@@ -38,8 +38,7 @@ async function deleteBook(bookId) {
     }
 }
 
-// Hàm mượn sách
-async function borrowBook(userId, bookId, returnDate) {
+async function borrowBook(userId, bookId, pickupDate, returnDate) {
     const db = client.db('Library');
 
     // Lấy thông tin sách
@@ -54,7 +53,7 @@ async function borrowBook(userId, bookId, returnDate) {
     const borrowTransaction = {
         userId: new ObjectId(userId),
         bookId: new ObjectId(bookId),
-        borrowDate: new Date(),
+        borrowDate: new Date(pickupDate), // Lấy pickupDate từ API request
         returnDate: new Date(returnDate),
         status: 'borrowed',
     };
@@ -62,9 +61,10 @@ async function borrowBook(userId, bookId, returnDate) {
     // Chèn giao dịch mượn sách vào cơ sở dữ liệu
     const result = await db.collection('borrowedBooks').insertOne(borrowTransaction);
 
-    // Không cập nhật trạng thái sách
     return result;
 }
+
+
 
 // Hàm lấy danh sách sách đã mượn của user
 async function getBorrowedBooks(userId) {

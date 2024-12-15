@@ -18,10 +18,10 @@ router.get('', async (req, res) => {
 // Endpoint mượn sách
 router.post('/borrow', verifyToken, async (req, res) => {
     try {
-        const { bookId, returnDate } = req.body;
+        const { bookId, pickupDate, returnDate } = req.body; // Thêm pickupDate
         const userId = req.user.userId;
 
-        const result = await borrowBook(userId, bookId, returnDate);
+        const result = await borrowBook(userId, bookId, pickupDate, returnDate);
         res.status(201).json({
             message: 'Book borrowed successfully',
             transactionId: result.insertedId,
@@ -31,6 +31,8 @@ router.post('/borrow', verifyToken, async (req, res) => {
         res.status(500).json({ message: 'Failed to borrow book', error: error.message });
     }
 });
+
+
 
 // Endpoint xem danh sách sách đã mượn
 router.get('/borrowed', verifyToken, async (req, res) => {

@@ -25,8 +25,8 @@
             <h1 class="text-black text-xl font-bold">Library</h1>
         </div>
         <div class="relative">
-            <input idss"search" type="text" placeholder="Search books..."
-                class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
+            <input id="search" type="text" placeholder="Search books..."
+                   class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
             <button class="absolute right-3 top-2 text-gray-600"><i class="fas fa-search"></i></button>
             <div id="suggestions" class="hidden absolute top-full mt-1 bg-white w-full shadow-md rounded">
                 <!-- Search suggestions will appear here -->
@@ -42,25 +42,25 @@
                 <ul>
                     <li class="mb-4">
                         <a href="/statics/homepage/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
                             <i class="fas fa-book"></i><span class="ml-2">Catalog</span>
                         </a>
                     </li>
                     <li class="mb-4">
                         <a href="/statics/account/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
                             <i class="fas fa-user"></i><span class="ml-2">Account</span>
                         </a>
                     </li>
                     <li class="mb-4">
                         <a href="/statics/history/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
                             <i class="fas fa-history"></i><span class="ml-2">History</span>
                         </a>
                     </li>
                     <li onclick="logOut()">
                         <a href="/statics/signin/index.html"
-                            class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
+                           class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200">
                             <i class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span>
                         </a>
                     </li>
@@ -116,9 +116,13 @@
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button type="button" onclick="closeBorrowModal()"
-                        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Confirm
-                        Borrow</button>
+                            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Confirm
+                        Borrow
+                    </button>
                 </div>
             </form>
         </div>
