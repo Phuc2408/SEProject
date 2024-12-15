@@ -24,7 +24,7 @@ router.post('/signup', async (req, res) => {
 
     try {
         // Thêm trường `isBanned` vào đối tượng người dùng nếu có
-        const newUser = await createUser(email, username, password, name, id, phone, gender, role || 'user', typeof isBanned === 'boolean' ? isBanned : false); // Kiểm tra isBanned trước khi truyền vào
+        const newUser = await createUser(email, username, password, name, id, phone, gender, role || 'user', false); // Kiểm tra isBanned trước khi truyền vào
         res.status(201).json({ message: "Signup successful", userId: newUser.insertedId });
     } catch (error) {
         console.error("Error during signup:", error);

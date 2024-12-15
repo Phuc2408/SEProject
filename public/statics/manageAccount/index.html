@@ -170,7 +170,7 @@
         }
 
         // Pagination variables
-        const itemsPerPage = 5;
+        const itemsPerPage = 10;
         let currentPage = 1;
 
         // Functions to render the table and handle pagination
@@ -181,7 +181,7 @@
 
             const tableBody = document.getElementById('accountTableBody');
             tableBody.innerHTML = '';
-
+            console.log(pageData.length);
             pageData.forEach(account => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -272,8 +272,9 @@
                 // Kiểm tra phản hồi từ API
                 if (response.ok) {
                     const result = await response.json();
-                    alert('Sign up successful! Please log in.');
+                    alert('Create user successfully');
                     document.querySelector('.model').style.display = 'none';
+                    loadUsers(); // Reload the list of users
                 } else {
                     const error = await response.json();
                     console.log(error);
