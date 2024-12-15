@@ -15,7 +15,7 @@ let db; // Biến lưu trữ kết nối database
 async function connectDB() {
     try {
         await client.connect();
-        db = client.db("library"); // Tên database "library"
+        db = client.db("Library"); // Tên database "Library"
         console.log("MongoDB connected!");
     } catch (error) {
         console.error("MongoDB connection failed:", error);

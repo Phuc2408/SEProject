@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "D:\\SEProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\SEProject\\services\\bookService.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:services\\bookService.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\SEProject\\public\\statics\\admin\\admin.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:public\\statics\\admin\\admin.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\SEProject\\public\\statics\\admin\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:public\\statics\\admin\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,19 +18,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "index.html",
+              "DocumentMoniker": "D:\\SEProject\\public\\statics\\admin\\index.html",
+              "RelativeDocumentMoniker": "public\\statics\\admin\\index.html",
+              "ToolTip": "D:\\SEProject\\public\\statics\\admin\\index.html",
+              "RelativeToolTip": "public\\statics\\admin\\index.html",
+              "ViewState": "AgIAACkAAAAAAAAAAAAAwFgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-12-15T13:34:22.641Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "bookService.js",
-              "DocumentMoniker": "D:\\SEProject\\services\\bookService.js",
-              "RelativeDocumentMoniker": "services\\bookService.js",
-              "ToolTip": "D:\\SEProject\\services\\bookService.js",
-              "RelativeToolTip": "services\\bookService.js",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
+              "Title": "admin.js",
+              "DocumentMoniker": "D:\\SEProject\\public\\statics\\admin\\admin.js",
+              "RelativeDocumentMoniker": "public\\statics\\admin\\admin.js",
+              "ToolTip": "D:\\SEProject\\public\\statics\\admin\\admin.js",
+              "RelativeToolTip": "public\\statics\\admin\\admin.js",
+              "ViewState": "AgIAADwAAAAAAAAAAAAgwGoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2024-12-14T07:23:46.578Z",
+              "WhenOpened": "2024-12-15T13:34:22.187Z",
               "EditorCaption": ""
             }
           ]

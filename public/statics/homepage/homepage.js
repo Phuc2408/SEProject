@@ -1,23 +1,25 @@
-﻿const search = document.getElementById('search');
+﻿// Biến toàn cục để lưu dữ liệu sách và bookId hiện tại
+let booksData = [];
+let currentBookId = null;
+
+// Lấy các phần tử DOM
+const search = document.getElementById('search');
 const suggestions = document.getElementById('suggestions');
 const bookDetailsModal = document.getElementById('bookDetailsModal');
 const borrowModal = document.getElementById('borrowModal');
-const pickupDate = document.getElementById('pickupDate');
-const returnDate = document.getElementById('returnDate');
 const bookGrid = document.getElementById('book-grid');
 const genreFilter = document.getElementById('genreFilter');
+const pickupDateInput = document.getElementById('pickupDate');
+const returnDateInput = document.getElementById('returnDate');
 
-let booksData = [];  // To store the fetched books
-
-// Log out function
+// Hàm đăng xuất
 function logOut() {
     localStorage.clear();
 }
 
-// Show book details in the modal
+// Hiển thị chi tiết sách trong modal
 function showBookDetails(bookId) {
-    const book = booksData.find(book => book._id === bookId); // Find book by ID
-    console.log(book);
+    const book = booksData.find(book => book._id === bookId);
     const detailsHTML = `
         <div class="flex items-center space-x-6">
             <img src="${book.coverImageUrl}" alt="${book.title} cover" class="w-32 h-48 object-cover rounded-md">
@@ -30,34 +32,28 @@ function showBookDetails(bookId) {
             </div>
         </div>
         <div class="flex justify-end space-x-4">
-    <button onclick="closeBookDetailsModal()" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">
-        Close
-    </button>
-    
-    <button onclick="showBorrowModal('${book._id}')" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-    Borrow
-    </button>
-</div>
-
+            <button onclick="closeBookDetailsModal()" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">
+                Close
+            </button>
+            <button onclick="showBorrowModal('${book._id}')" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Borrow
+            </button>
+        </div>
     `;
     document.getElementById('bookDetails').innerHTML = detailsHTML;
     bookDetailsModal.classList.remove('hidden');
 }
 
-// Close the book details modal
+// Đóng modal chi tiết sách
 function closeBookDetailsModal() {
     bookDetailsModal.classList.add('hidden');
 }
 
-// Show the borrow modal
-let currentBookId = null; // Biến toàn cục lưu bookId
-
+// Hiển thị modal mượn sách
 function showBorrowModal(bookId) {
-    currentBookId = bookId; // Lưu bookId hiện tại
-    const pickupDateInput = document.getElementById('pickupDate');
-    const returnDateInput = document.getElementById('returnDate');
+    currentBookId = bookId;
 
-    // Tính ngày trả sách mặc định (30 ngày sau ngày mượn)
+    // Tự động tính toán ngày trả sách dựa trên ngày mượn
     const today = new Date();
     pickupDateInput.valueAsDate = today;
 
@@ -68,16 +64,18 @@ function showBorrowModal(bookId) {
     borrowModal.classList.remove('hidden');
 }
 
-
-// Close the borrow modal
+// Đóng modal mượn sách
 function closeBorrowModal() {
     borrowModal.classList.add('hidden');
 }
 
-// Filter books by genre
-function filterBooksByGenre() {
-    const selectedGenre = genreFilter.value;
-    bookGrid.innerHTML = '';
+// Cập nhật ngày trả sách khi thay đổi ngày mượn
+pickupDateInput.addEventListener('change', function () {
+    const selectedDate = new Date(this.value);
+    const returnDate = new Date(selectedDate);
+    returnDate.setDate(selectedDate.getDate() + 30);
+    returnDateInput.valueAsDate = returnDate;
+});
 
 // Tải sách từ API
 async function loadBooks(search = null) {
@@ -93,7 +91,7 @@ async function loadBooks(search = null) {
     }
 }
 
-// Create a book element for the grid
+// Tạo phần tử sách
 function createBookElement(book) {
     const bookElement = document.createElement('div');
     bookElement.className = 'bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400';
@@ -105,38 +103,11 @@ function createBookElement(book) {
             <p class="mt-2">${book.genre}</p>
         </div>
     `;
-
-    // Add an event listener to show book details when clicked
     bookElement.addEventListener('click', () => showBookDetails(book._id));
     return bookElement;
 }
 
-// Handle infinite scroll
-let loadedBooks = 0;
-window.addEventListener('scroll', function () {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-        if (loadedBooks >= booksData.length) return;
-
-        loadMoreBooks();
-    }
-});
-
-// Load more books when scrolling down
-function loadMoreBooks() {
-    const bookGrid = document.getElementById('book-grid');
-    const booksToLoad = 4; // Load 4 more books at a time
-    const books = booksData.slice(loadedBooks, loadedBooks + booksToLoad);
-
-    books.forEach(book => {
-        bookGrid.appendChild(createBookElement(book));
-    });
-
-    loadedBooks += booksToLoad;
-}
-
-// Event listener for the genre filter
-genreFilter.addEventListener('change', filterBooksByGenre);
-
+// Gửi yêu cầu mượn sách
 document.getElementById('borrowForm').addEventListener('submit', async function (e) {
     e.preventDefault(); // Ngăn form reload trang
 
@@ -152,6 +123,7 @@ document.getElementById('borrowForm').addEventListener('submit', async function 
             },
             body: JSON.stringify({
                 bookId: currentBookId, // Gửi bookId hiện tại
+                pickupDate, // Gửi pickupDate từ form
                 returnDate
             }),
         });

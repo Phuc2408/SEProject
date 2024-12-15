@@ -33,23 +33,44 @@ function displayBorrowedBooks(borrowedBooks) {
     }
 
     borrowedBooks.forEach(book => {
+        // Xác định class màu sắc dựa vào trạng thái
+        const statusClass = getStatusClass(book.status);
+
         const bookElement = document.createElement('div');
         bookElement.className = 'p-4 border rounded mb-4 bg-white shadow-md';
+
         bookElement.innerHTML = `
             <h3 class="text-lg font-semibold">${book.bookTitle}</h3>
             <p>Borrow Date: ${new Date(book.borrowDate).toLocaleDateString()}</p>
             <p>Return Date: ${new Date(book.returnDate).toLocaleDateString()}</p>
-            <p>Status: <span class="${book.status === 'borrowed' ? 'text-green-500' : 'text-red-500'}">${book.status}</span></p>
+            <p>Status: <span class="${statusClass} font-bold">${book.status}</span></p>
             <div class="flex justify-end space-x-4 mt-4">
                 <button class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                         onclick="openExtendPopup('${book._id}', '${book.returnDate}')">Extend</button>
-
-                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600" onclick="openLostPopup('${book._id}')">Lost</button>
+                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        onclick="openLostPopup('${book._id}')">Lost</button>
             </div>
         `;
         borrowedBooksContainer.appendChild(bookElement);
     });
 }
+
+// Hàm xác định class màu sắc dựa vào trạng thái
+function getStatusClass(status) {
+    switch (status.toLowerCase()) {
+        case 'borrowed':
+            return 'text-green-500'; // Màu xanh
+        case 'picked-up':
+        case 'returned':
+            return 'text-yellow-500'; // Màu vàng
+        case 'overdue':
+        case 'lost':
+            return 'text-red-500'; // Màu đỏ
+        default:
+            return 'text-gray-500'; // Mặc định là màu xám
+    }
+}
+
 
 let currentBorrowedBookId = null; // Biến toàn cục lưu borrowedBookId
 
