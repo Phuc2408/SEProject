@@ -4,10 +4,11 @@
     "\\api",
     "\\config",
     "\\middleware",
-    "\\public",
     "\\public\\statics",
+    "\\public\\statics\\admin",
+    "\\public\\statics\\pickups",
     "\\services"
   ],
-  "SelectedNode": "\\public\\statics\\account",
+  "SelectedNode": "\\server.js",
   "PreviewInSolutionExplorer": false
 }
