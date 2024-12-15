@@ -79,52 +79,12 @@ function filterBooksByGenre() {
     const selectedGenre = genreFilter.value;
     bookGrid.innerHTML = '';
 
-    const filteredBooks = booksData.filter(book => selectedGenre === '' || book.genre === selectedGenre);
-
-    filteredBooks.forEach(book => {
-        bookGrid.appendChild(createBookElement(book));
-    });
-}
-
-// Search books based on user input
-function searchBooks() {
-    const query = search.value.trim().toLowerCase();
-    suggestions.innerHTML = '';
-
-    if (query) {
-        const matches = booksData.filter(book => book.title.toLowerCase().includes(query));
-        if (matches.length > 0) {
-            matches.forEach(book => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = 'p-2 hover:bg-gray-100 cursor-pointer';
-                suggestionItem.textContent = book.title;
-                suggestionItem.addEventListener('click', () => {
-                    search.value = book.title;
-                    suggestions.innerHTML = '';
-                    showBookDetails(book._id); // Open book details modal
-                });
-                suggestions.appendChild(suggestionItem);
-            });
-            suggestions.classList.remove('hidden');
-        } else {
-            suggestions.classList.add('hidden');
-        }
-    } else {
-        suggestions.classList.add('hidden');
-    }
-}
-
-
-// Function to load books from the server (API)
-async function loadBooks() {
+// Tải sách từ API
+async function loadBooks(search = null) {
     try {
-        const response = await fetch('/api/user-books');  // Fetch books from the API
-        booksData = await response.json();  // Store the books in the global array
-
-        const bookGrid = document.getElementById("book-grid");
-        bookGrid.innerHTML = '';  // Clear the grid before adding new books
-
-        // Create and append book elements to the grid
+        const response = await fetch(`/api/user-books${search ? `?param=${search}` : ''}`);
+        booksData = await response.json();
+        bookGrid.innerHTML = '';
         booksData.forEach(book => {
             bookGrid.appendChild(createBookElement(book));
         });
@@ -210,7 +170,33 @@ document.getElementById('borrowForm').addEventListener('submit', async function 
 });
 
 
-// Initialize the app on page load
-document.addEventListener('DOMContentLoaded', function () {
-    loadBooks();  // Load books when the page is loaded
+function searchBooks() {
+    const query = search.value.trim().toLowerCase();
+    // if (query.length > 0)
+    //     loadBooks(query);
+}
+
+search.addEventListener('keypress', async (event) => {
+    console.log(event.key);
+    if (event.key === "Enter") {
+        const a = search.value.trim().toLowerCase();
+        loadBooks(a);
+    }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    loadBooks();
+});
+
+// Bộ lọc thể loại sách
+genreFilter.addEventListener('change', () => {
+    const selectedGenre = genreFilter.value;
+    bookGrid.innerHTML = '';
+    const filteredBooks = booksData.filter(book => !selectedGenre || book.genre === selectedGenre);
+    filteredBooks.forEach(book => {
+        bookGrid.appendChild(createBookElement(book));
+    });
+});
+
+// Khởi tạo ứng dụng
+// document.addEventListener('DOMContentLoaded', loadBooks);

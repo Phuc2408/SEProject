@@ -6,8 +6,9 @@ const router = express.Router();
 
 // Endpoint lấy danh sách sách
 router.get('', async (req, res) => {
+    const { param } = req.query;
     try {
-        const books = await getBooks(); // Lấy danh sách sách từ dịch vụ
+        const books = await getBooks(param); // Lấy danh sách sách từ dịch vụ
         res.json(books); // Trả về danh sách sách dưới dạng JSON
     } catch (error) {
         console.error('Error fetching books:', error);

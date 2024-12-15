@@ -3,10 +3,12 @@ const { client, getDbConnection } = require('../config/db'); // Import client t�
 
 
 // Hàm lấy danh sách sách
-async function getBooks() {
+async function getBooks(param = null) {
     try {
         const db = client.db("Library"); // Đảm bảo sử dụng đúng tên database
-        const books = await db.collection("books").find().toArray(); // Lấy danh sách sách từ collection "books"
+        const query = { title: { $regex: param ? `.*${param}.*` : ".*", $options: 'i' } };  // 'i' for case-insensitive search
+        console.log(query)
+        const books = await db.collection("books").find(query).toArray(); // Lấy danh sách sách từ collection "books"
         return books;
     } catch (error) {
         console.error("Error fetching books:", error);
