@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         alert('You have logged out.');
-        window.location.href = '/statics/signin.html';
+        window.location.href = '/statics/signin/index.html';
     });
 
     // Fetch books and display in the table

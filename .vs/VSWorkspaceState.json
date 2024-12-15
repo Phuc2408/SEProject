@@ -1,14 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\api",
     "\\config",
     "\\middleware",
+    "\\public",
     "\\public\\statics",
-    "\\public\\statics\\admin",
+    "\\public\\statics\\history",
     "\\public\\statics\\pickups",
+    "\\public\\statics\\returns",
+    "\\public\\statics\\signin",
     "\\services"
   ],
-  "SelectedNode": "\\server.js",
+  "SelectedNode": "\\public\\statics\\history\\index.html",
   "PreviewInSolutionExplorer": false
 }

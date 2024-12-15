@@ -45,6 +45,13 @@ function displayPickups(pickups) {
     });
 }
 
+// Logout function
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    alert('You have logged out.');
+    window.location.href = '/statics/signin/index.html';
+});
 
 // Confirm pickup
 async function confirmPickup(pickupId) {
