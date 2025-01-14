@@ -3,8 +3,16 @@ const { verifyToken, isAdmin } = require('../middleware/authMiddleware'); // Ch�
 const { addBook, getBooks, deleteBook } = require('../services/bookService'); // Import các service
 const { client, getDbConnection } = require('../config/db'); // Import getDbConnection
 const { ObjectId } = require('mongodb');
+const { createClient } = require('@supabase/supabase-js');
+const multer = require('multer');
 
+const upload = multer();
 const router = express.Router();
+
+// Khởi tạo Supabase client
+const supabaseUrl = 'https://lpbtludrezmclaggbyel.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxwYnRsdWRyZXptY2xhZ2dieWVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4MzA2NjQsImV4cCI6MjA1MjQwNjY2NH0.1jxaC4GXi2bQTMt5Z45iJ0gO9oUTE6-VJpylj7fslNY';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Lấy danh sách sách
 router.get('/books', verifyToken, isAdmin, async (req, res) => {
@@ -17,23 +25,55 @@ router.get('/books', verifyToken, isAdmin, async (req, res) => {
     }
 });
 
-// Thêm sách
-router.post('/books', verifyToken, isAdmin, async (req, res) => {
-    const { title, author, genre, year } = req.body;
 
-    if (!title || !author) {
-        return res.status(400).json({ message: 'Title and author are required.' });
+// Thêm sách (với upload ảnh qua Supabase)
+router.post('/books', verifyToken, isAdmin, upload.single('image'), async (req, res) => {
+    const { title, author, genre, year } = req.body;
+    const file = req.file;
+
+    if (!title || !author || !file) {
+        return res.status(400).json({ message: 'Title, author, and image are required.' });
     }
 
     try {
-        const newBook = { title, author, genre, year, addedAt: new Date() };
-        const result = await addBook(newBook); // Gọi service addBook
+        // 1. Tải ảnh lên Supabase Storage
+        const fileName = `${Date.now()}-${file.originalname}`;
+        const { data: storageData, error: storageError } = await supabase
+            .storage
+            .from('Image')
+            .upload(fileName, file.buffer, {
+                upsert: true,
+            });
+
+        if (storageError) {
+            console.error('Error uploading image to Supabase:', storageError);
+            return res.status(500).json({ message: 'Failed to upload image', error: storageError });
+        }
+
+        // Lấy URL công khai của ảnh
+        const coverImageUrl = supabase
+            .storage
+            .from('Image')
+            .getPublicUrl(fileName).data.publicUrl;
+        console.log(coverImageUrl);
+        // 2. Thêm sách với coverImageUrl vào MongoDB (sử dụng service addBook)
+        const newBook = {
+            title,
+            author,
+            genre,
+            year,
+            coverImageUrl,
+            addedAt: new Date()
+        };
+        const result = await addBook(newBook);
+
         res.status(201).json({ message: 'Book added successfully.', bookId: result.insertedId });
     } catch (error) {
-        console.error('Error adding book:', error); // Thêm log chi tiết lỗi
+        console.error('Error adding book:', error);
         res.status(500).json({ message: 'Failed to add book', error });
     }
 });
+
 
 // Xóa sách
 router.delete('/books/:id', verifyToken, isAdmin, async (req, res) => { // Thêm verifyToken trước isAdmin

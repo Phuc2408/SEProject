@@ -63,26 +63,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add book
     addBookForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const title = document.getElementById('bookTitle').value;
         const author = document.getElementById('bookAuthor').value;
         const genre = document.getElementById('bookGenre').value;
         const year = document.getElementById('bookYear').value;
+        const file = document.getElementById('bookCover').files[0]; // Lấy file ảnh
+
+        const formData = new FormData(); // Sử dụng FormData
+        formData.append('title', title);
+        formData.append('author', author);
+        formData.append('genre', genre);
+        formData.append('year', year);
+        formData.append('image', file); // Thêm file ảnh vào FormData
 
         try {
             const response = await fetch('http://localhost:5000/api/admin/books', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
+                    // Không cần 'Content-Type' khi dùng FormData
                 },
-                body: JSON.stringify({ title, author, genre, year }),
+                body: formData, // Gửi FormData làm body
             });
-            if (!response.ok) throw new Error('Failed to add book');
+
+            if (!response.ok) {
+                const data = await response.json(); // Lấy thông báo lỗi từ server
+                throw new Error(data.message || 'Failed to add book');
+            }
+
             closeAddBookModal();
             fetchBooks();
         } catch (error) {
             console.error('Error adding book:', error);
-            alert('Failed to add book.');
+            alert(error.message); // Hiển thị thông báo lỗi chi tiết
         }
     });
 
