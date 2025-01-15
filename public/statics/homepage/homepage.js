@@ -36,7 +36,6 @@ function showBookDetails(bookId) {
         <p class="text-lg text-gray-600">by ${book.author}</p>
         <p class="text-sm text-gray-500">Publish Year: ${book.year}</p>
         <p class="text-sm text-gray-500">Genre: ${book.genre}</p>
-        <p class="text-gray-700">Description: ${book.description ? book.description : "No description available."}</p>
     </div>
 </div>
 <div class="flex justify-end space-x-4 mt-4">
