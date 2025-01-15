@@ -21,24 +21,39 @@ function logOut() {
 function showBookDetails(bookId) {
     const book = booksData.find(book => book._id === bookId);
     const detailsHTML = `
-        <div class="flex items-center space-x-6">
-            <img src="${book.coverImageUrl}" alt="${book.title} cover" class="w-32 h-48 object-cover rounded-md">
-            <div class="space-y-3">
-                <h3 class="text-3xl font-semibold text-gray-800">${book.title}</h3>
-                <p class="text-lg text-gray-600">by ${book.author}</p>
-                <p class="text-sm text-gray-500">Publish Year: ${book.year}</p>
-                <p class="text-sm text-gray-500">Genre: ${book.genre}</p>
-                <p class="text-gray-700">Description: ${book.description}</p>
-            </div>
-        </div>
-        <div class="flex justify-end space-x-4">
-            <button onclick="closeBookDetailsModal()" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">
-                Close
-            </button>
-            <button onclick="showBorrowModal('${book._id}')" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                Borrow
-            </button>
-        </div>
+       <div class="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6 p-4">
+    <!-- Container cho hình ảnh -->
+    <div class="w-48 h-64 overflow-hidden rounded-md flex justify-center items-center bg-gray-100">
+        <img
+            src="${book.coverImageUrl}"
+            alt="${book.title} cover"
+            class="max-w-full max-h-full object-contain"
+        />
+    </div>
+    <!-- Container cho thông tin sách -->
+    <div class="space-y-3 flex-1">
+        <h3 class="text-2xl font-semibold text-gray-800">${book.title}</h3>
+        <p class="text-lg text-gray-600">by ${book.author}</p>
+        <p class="text-sm text-gray-500">Publish Year: ${book.year}</p>
+        <p class="text-sm text-gray-500">Genre: ${book.genre}</p>
+        <p class="text-gray-700">Description: ${book.description ? book.description : "No description available."}</p>
+    </div>
+</div>
+<div class="flex justify-end space-x-4 mt-4">
+    <button
+        onclick="closeBookDetailsModal()"
+        class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400"
+    >
+        Close
+    </button>
+    <button
+        onclick="showBorrowModal('${book._id}')"
+        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+    >
+        Borrow
+    </button>
+</div>
+
     `;
     document.getElementById('bookDetails').innerHTML = detailsHTML;
     bookDetailsModal.classList.remove('hidden');
@@ -94,18 +109,27 @@ async function loadBooks(search = null) {
 // Tạo phần tử sách
 function createBookElement(book) {
     const bookElement = document.createElement('div');
-    bookElement.className = 'bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400';
+    bookElement.className = 'bg-white rounded-lg shadow-md overflow-hidden border hover:shadow-lg transition-transform duration-300 hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400';
+
     bookElement.innerHTML = `
-        <img src="${book.coverImageUrl}" alt="${book.title}" class="w-full h-48 object-cover">
+        <div class="w-full h-48 flex justify-center items-center bg-gray-100">
+            <img 
+                src="${book.coverImageUrl}" 
+                alt="${book.title}" 
+                class="max-w-full max-h-full object-contain rounded-sm"
+            >
+        </div>
         <div class="p-4">
-            <h3 class="text-lg font-semibold mb-2">${book.title}</h3>
-            <p class="text-gray-600">${book.author}</p>
-            <p class="mt-2">${book.genre}</p>
+            <h3 class="text-lg font-semibold text-gray-800 truncate">${book.title}</h3>
+            <p class="text-gray-600 text-sm mt-1">${book.author}</p>
+            <p class="text-sm text-gray-500 mt-1">${book.genre}</p>
         </div>
     `;
+
     bookElement.addEventListener('click', () => showBookDetails(book._id));
     return bookElement;
 }
+
 
 // Gửi yêu cầu mượn sách
 document.getElementById('borrowForm').addEventListener('submit', async function (e) {

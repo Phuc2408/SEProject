@@ -4,13 +4,12 @@
     "\\api",
     "\\middleware",
     "\\public",
+    "\\public\\assets",
+    "\\public\\assets\\css",
     "\\public\\statics",
-    "\\public\\statics\\admin",
-    "\\public\\statics\\manageAccount",
-    "\\public\\statics\\pickups",
-    "\\public\\statics\\returns",
+    "\\public\\statics\\homepage",
     "\\services"
   ],
-  "SelectedNode": "\\public\\statics\\manageAccount\\index.html",
+  "SelectedNode": "\\public\\statics\\homepage\\homepage.js",
   "PreviewInSolutionExplorer": false
 }
